@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block contenido %}
+<form method="post" id="registro" action="/buscar">
+  <div class="mb-3">
+    <label for="input" class="form-label">Pokemon</label>
+    <input type="text" class="form-control" name="name" id="name">
+  </div>
+  <button type="submit" class="btn btn-primary">Subir</button>
+</form>
+{% endblock %}

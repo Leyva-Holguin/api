@@ -20,8 +20,18 @@ def buscar():
     resp = request.get(f"{api}{pokemon_name}")
     if resp.status_code == 200:
         pokemon_data = resp.json()
+        pokemon_info= {
+            'name': pokemon_data['name'].title(),
+            'id': pokemon_data['id'],
+            height
+            weight
+            sprite
+            'types'
+            'abilities' [a['ability']['name'].title() for a in pokemon_data['abilities']]
+            'stats':{}
+            
+        }
         return render_template('pokemon.html', pokemon=pokemon_data)
-
 
 #@app.route('/api-data')
 #def get_api_data():

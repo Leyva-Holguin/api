@@ -12,8 +12,16 @@ def index():
 
 @app.route('/buscar', methods="POST")
 def buscar():
-    pokemon = request.form.get('name', '').strip().lower()
-    return render_template('pokemon.html')
+    error=None
+    pokemon_name = request.form.get('name', '').strip().lower()
+    if not pokemon_name:
+        flash('Ingrese un pokemon', 'error')
+        return redirect(url_for('index'))
+    resp = request.get(f"{api}{pokemon_name}")
+    if resp.status_code == 200:
+        pokemon_data = resp.json()
+        return render_template('pokemon.html', pokemon=pokemon_data)
+
 
 #@app.route('/api-data')
 #def get_api_data():

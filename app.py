@@ -36,14 +36,16 @@ def buscar():
         else: 
             flash('Pokémon no encontrado', 'error')
             return redirect(url_for('index'))
-    except requests.exceptions.RequestException:
-        print("No puedes dividir entre cero.")
+    except requests.exceptions.RequestException as e:
+        flash('Error al busacar el pokemon', 'error')
+        return redirect(url_for('index'))
 
 #@app.route('/api-data')
 #def get_api_data():
 #    response = request.get('https://pokeapi.co/api/v2')
 #    data = response.json()
 #    return jsonify(data)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

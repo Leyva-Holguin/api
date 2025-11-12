@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 import requests
 api  = "https://pokeapi.co/api/v2/pokemon/"
 
@@ -17,22 +17,27 @@ def buscar():
     if not pokemon_name:
         flash('Ingrese un pokemon', 'error')
         return redirect(url_for('index'))
-    resp = requests.get(f"{api}{pokemon_name}")
-    if resp.status_code == 200:
-        pokemon_data = resp.json()
-        pokemon_info= {
-            'name': pokemon_data['name'].title(),
-            'id': pokemon_data['id'],
-            'height': pokemon_data['height']/10,
-            'weight': pokemon_data['weight']/10,
-            'sprite': pokemon_data['sprites']['front_default'],
-            'types': [t['type']['name'].title() for t in pokemon_data['types']],
-            'stats':{}
-        }
-        return render_template('pokemon.html', pokemon=pokemon_info)
-    else: 
-        flash('Pokémon no encontrado', 'error')
-        return redirect(url_for('index'))
+    
+    try:
+        resp = requests.get(f"{api}{pokemon_name}")
+        if resp.status_code == 200:
+            pokemon_data = resp.json()
+            pokemon_info= {              
+                'name': pokemon_data['name'].title(),
+                'id': pokemon_data['id'],
+                'height': pokemon_data['height']/10,
+                'weight': pokemon_data['weight']/10,
+                'sprite': pokemon_data['sprites']['front_default'],
+                'shiny': pokemon_data['sprites']['front_shiny'],
+                'abilities':[a['ability']['name'].title() for a in pokemon_data['abilities']],
+                'types': [t['type']['name'].title() for t in pokemon_data['types']],
+            }
+            return render_template('pokemon.html', pokemon=pokemon_info)
+        else: 
+            flash('Pokémon no encontrado', 'error')
+            return redirect(url_for('index'))
+    except requests.exceptions.RequestException:
+        print("No puedes dividir entre cero.")
 
 #@app.route('/api-data')
 #def get_api_data():

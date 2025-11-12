@@ -9,6 +9,8 @@
         <div class="card-body">
             {% if pokemon.sprite %}
             <img src="{{ pokemon.sprite }}" alt="{{ pokemon.name }}" class="img-fluid mb-3">
+            <img src="{{ pokemon.shiny }}" alt="{{ pokemon.name }}" class="img-fluid mb-3">
+
             {% endif %}
             <p><strong>Altura:</strong> {{ pokemon.height }} m</p>
             <p><strong>Peso:</strong> {{ pokemon.weight }} kg</p>

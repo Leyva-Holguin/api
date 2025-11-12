@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
-
+import requests
 api  = "https://pokeapi.co/api/v2/pokemon/"
 
 app = Flask(__name__)
@@ -10,28 +10,29 @@ app.secret_key = 'CORBATAS_VIDRIO_EN_CIELOS_DE_MIEL_UN_GOLEM_REFLEJADO_EN_EL_ALE
 def index():
     return render_template('index.html')
 
-@app.route('/buscar', methods="POST")
+@app.route('/buscar', methods=["POST"])
 def buscar():
     error=None
     pokemon_name = request.form.get('name', '').strip().lower()
     if not pokemon_name:
         flash('Ingrese un pokemon', 'error')
         return redirect(url_for('index'))
-    resp = request.get(f"{api}{pokemon_name}")
+    resp = requests.get(f"{api}{pokemon_name}")
     if resp.status_code == 200:
         pokemon_data = resp.json()
         pokemon_info= {
             'name': pokemon_data['name'].title(),
             'id': pokemon_data['id'],
-            height
-            weight
-            sprite
-            'types'
-            'abilities' [a['ability']['name'].title() for a in pokemon_data['abilities']]
+            'height': pokemon_data['height']/10,
+            'weight': pokemon_data['weight']/10,
+            'sprite': pokemon_data['sprites']['front_default'],
+            'types': [t['type']['name'].title() for t in pokemon_data['types']],
             'stats':{}
-            
         }
-        return render_template('pokemon.html', pokemon=pokemon_data)
+        return render_template('pokemon.html', pokemon=pokemon_info)
+    else: 
+        flash('Pokémon no encontrado', 'error')
+        return redirect(url_for('index'))
 
 #@app.route('/api-data')
 #def get_api_data():
